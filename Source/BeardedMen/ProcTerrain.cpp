@@ -14,12 +14,17 @@ AProcTerrain::AProcTerrain()
 {
   // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
   PrimaryActorTick.bCanEverTick = true;
-  update_terrain_model();
+
+  USphereComponent* SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
+  RootComponent = SphereComponent;
+  mesh_ = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
+  mesh_->AttachTo(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void AProcTerrain::BeginPlay()
 {
+  update_terrain_model();
   Super::BeginPlay();
 }
 
@@ -132,11 +137,6 @@ void AProcTerrain::update_terrain_model()
   auto raw_v_data = decoded_mesh.getRawVertexData();
   auto raw_i_data = decoded_mesh.getRawIndexData();
 
-  USphereComponent* SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
-  RootComponent = SphereComponent;
-  
-  UProceduralMeshComponent* mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
-
   TArray<FVector> vertices;
   for (uint32 i = 0; i < decoded_mesh.getNoOfVertices(); ++i) {
     vertices.Add(FVector(
@@ -144,19 +144,35 @@ void AProcTerrain::update_terrain_model()
       raw_v_data[i].position.getY(),
       raw_v_data[i].position.getZ()));
   }
-  //vertices.Add(FVector(0, 0, 0));
-  //vertices.Add(FVector(0, 100, 0));
-  //vertices.Add(FVector(0, 0, 100));
 
   TArray<int32> triangles;
   for (uint32 i = 0; i < decoded_mesh.getNoOfIndices(); ++i) {
     triangles.Add(raw_i_data[i]);
   }
 
-  mesh->CreateMeshSection(1, vertices, triangles, 
-    TArray<FVector>(), TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>(), 
-    false);
-  // With default options
-  //mesh->CreateMeshSection(1, vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>(), false);
-  mesh->AttachTo(RootComponent);
+  TArray<FVector2D> uv0;
+  for (uint32 i = 0; i < decoded_mesh.getNoOfVertices(); ++i) {
+    auto u = raw_v_data[i].data.getMaterial();
+    auto v = raw_v_data[i].data.getDensity();
+    uv0.Add(FVector2D((float)u, (float)v));
+  }
+
+  mesh_->CreateMeshSection(1, vertices, triangles, 
+                          TArray<FVector>(), uv0,
+                          TArray<FColor>(), TArray<FProcMeshTangent>(), 
+                          false);
+  
+  if (terrain_mat_) {
+    mesh_->SetMaterial(0, terrain_mat_);
+  }
+}
+
+void AProcTerrain::PostEditChangeProperty(FPropertyChangedEvent& pce) {
+  FName PropertyName = (pce.Property != NULL) ? pce.Property->GetFName() : NAME_None;
+  if (PropertyName == GET_MEMBER_NAME_CHECKED(AProcTerrain, terrain_mat_) 
+    && mesh_ && terrain_mat_)
+  {
+    mesh_->SetMaterial(0, terrain_mat_);
+  }
+  Super::PostEditChangeProperty(pce);
 }
