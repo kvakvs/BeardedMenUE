@@ -161,9 +161,10 @@ void AProcTerrain::update_terrain_model()
                           TArray<FVector>(), uv0,
                           TArray<FColor>(), TArray<FProcMeshTangent>(), 
                           false);
+  mesh_->SetWorldScale3D(FVector(bm::CELL_SIZE, bm::CELL_SIZE, bm::CELL_SIZE));
   
   if (terrain_mat_) {
-    mesh_->SetMaterial(0, terrain_mat_);
+    mesh_->SetMaterial(1, terrain_mat_);
   }
 }
 

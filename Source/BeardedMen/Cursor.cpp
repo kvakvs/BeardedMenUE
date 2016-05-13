@@ -45,7 +45,16 @@ void ACursor::SetupPlayerInputComponent(class UInputComponent* InputComponent)
   Super::SetupPlayerInputComponent(InputComponent);
 
   InputComponent->BindAction("CursorRight", IE_Pressed, this, &ACursor::move_right);
+  InputComponent->BindAction("CursorRight", IE_Repeat, this, &ACursor::move_right);
+
   InputComponent->BindAction("CursorLeft", IE_Pressed, this, &ACursor::move_left);
+  InputComponent->BindAction("CursorLeft", IE_Repeat, this, &ACursor::move_left);
+
+  InputComponent->BindAction("CursorDown", IE_Pressed, this, &ACursor::move_down);
+  InputComponent->BindAction("CursorDown", IE_Repeat, this, &ACursor::move_down);
+
+  InputComponent->BindAction("CursorUp", IE_Pressed, this, &ACursor::move_up);
+  InputComponent->BindAction("CursorUp", IE_Repeat, this, &ACursor::move_up);
 }
 
 void ACursor::move_right()
@@ -59,5 +68,19 @@ void ACursor::move_left()
 {
   auto loc = GetActorLocation();
   loc.X -= bm::CELL_SIZE;
+  SetActorLocation(loc);
+}
+
+void ACursor::move_down()
+{
+  auto loc = GetActorLocation();
+  loc.Y += bm::CELL_SIZE;
+  SetActorLocation(loc);
+}
+
+void ACursor::move_up()
+{
+  auto loc = GetActorLocation();
+  loc.Y -= bm::CELL_SIZE;
   SetActorLocation(loc);
 }

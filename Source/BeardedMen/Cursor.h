@@ -30,6 +30,8 @@ public:
   // Keyboard actions
   void move_right();
   void move_left();
+  void move_up();
+  void move_down();
 
   UPROPERTY(EditAnywhere)
   USceneComponent* OurVisibleComponent;
