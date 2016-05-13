@@ -17,6 +17,7 @@ class BEARDEDMEN_API AProcTerrain : public AActor
 public:	
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Materials)
   UMaterial* terrain_mat_ = nullptr;
+  UPROPERTY()
   UProceduralMeshComponent* mesh_ = nullptr;
 
   // Sets default values for this actor's properties
