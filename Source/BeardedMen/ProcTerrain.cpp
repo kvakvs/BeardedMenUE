@@ -138,11 +138,23 @@ void AProcTerrain::update_terrain_model()
   auto raw_i_data = decoded_mesh.getRawIndexData();
 
   TArray<FVector> vertices;
+  TArray<FVector2D> uv0;
+  TArray<FVector> normals;
   for (uint32 i = 0; i < decoded_mesh.getNoOfVertices(); ++i) {
     vertices.Add(FVector(
       raw_v_data[i].position.getX(),
-      raw_v_data[i].position.getY(),
-      raw_v_data[i].position.getZ()));
+      raw_v_data[i].position.getZ(),
+      raw_v_data[i].position.getY()
+    ));
+
+    normals.Add(FVector(raw_v_data[i].normal.getX(),
+      raw_v_data[i].normal.getZ(),
+      raw_v_data[i].normal.getY()
+    ));
+
+    auto u = raw_v_data[i].data.getMaterial();
+    auto v = raw_v_data[i].data.getDensity();
+    uv0.Add(FVector2D((float)u, (float)v));
   }
 
   TArray<int32> triangles;
@@ -150,18 +162,12 @@ void AProcTerrain::update_terrain_model()
     triangles.Add(raw_i_data[i]);
   }
 
-  TArray<FVector2D> uv0;
-  for (uint32 i = 0; i < decoded_mesh.getNoOfVertices(); ++i) {
-    auto u = raw_v_data[i].data.getMaterial();
-    auto v = raw_v_data[i].data.getDensity();
-    uv0.Add(FVector2D((float)u, (float)v));
-  }
-
   mesh_->CreateMeshSection(1, vertices, triangles, 
-                          TArray<FVector>(), uv0,
+                          normals, uv0,
                           TArray<FColor>(), TArray<FProcMeshTangent>(), 
                           false);
   mesh_->SetWorldScale3D(FVector(bm::CELL_SIZE, bm::CELL_SIZE, bm::CELL_SIZE));
+  mesh_->SetWorldRotation(FRotator(180.f, 0.f, 0.f));
   
   if (terrain_mat_) {
     mesh_->SetMaterial(1, terrain_mat_);
