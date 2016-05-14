@@ -15,10 +15,12 @@ class BEARDEDMEN_API AProcTerrain : public AActor
   GENERATED_BODY()
 	
 public:	
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Materials)
-  UMaterial* terrain_mat_ = nullptr;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UMaterial* terrain_mat_ = nullptr;
   UPROPERTY()
-  UProceduralMeshComponent* mesh_ = nullptr;
+    UProceduralMeshComponent* mesh_ = nullptr;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FRotator mesh_rot_;
 
   // Sets default values for this actor's properties
   AProcTerrain();

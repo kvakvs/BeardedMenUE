@@ -20,7 +20,7 @@ AProcTerrain::AProcTerrain()
   RootComponent = sphere;
 
   mesh_ = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
-  mesh_->AttachTo(RootComponent);
+  mesh_->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -145,14 +145,15 @@ void AProcTerrain::update_terrain_model()
   for (uint32 i = 0; i < decoded_mesh.getNoOfVertices(); ++i) {
     vertices.Add(FVector(
       raw_v_data[i].position.getX(),
-      raw_v_data[i].position.getZ(),
-      raw_v_data[i].position.getY()
+      raw_v_data[i].position.getY(),
+      raw_v_data[i].position.getZ()
     ));
 
-    normals.Add(FVector(raw_v_data[i].normal.getX(),
-      raw_v_data[i].normal.getZ(),
-      raw_v_data[i].normal.getY()
-    ));
+    //normals.Add(FVector(
+    //  -raw_v_data[i].normal.getX(),
+    //  -raw_v_data[i].normal.getZ(),
+    //  -raw_v_data[i].normal.getY()
+    //));
 
     auto u = raw_v_data[i].data.getMaterial();
     auto v = raw_v_data[i].data.getDensity();
@@ -168,8 +169,8 @@ void AProcTerrain::update_terrain_model()
                           normals, uv0,
                           TArray<FColor>(), TArray<FProcMeshTangent>(), 
                           false);
-  mesh_->SetWorldScale3D(FVector(bm::CELL_SIZE, bm::CELL_SIZE, bm::CELL_SIZE));
-  mesh_->SetWorldRotation(FRotator(180.f, 0.f, 0.f));
+  mesh_->SetRelativeScale3D(FVector(bm::CELL_SIZE, bm::CELL_SIZE, -bm::CELL_SIZE));
+  mesh_->SetRelativeRotation(mesh_rot_);
   
   if (terrain_mat_) {
     mesh_->SetMaterial(1, terrain_mat_);
@@ -178,10 +179,12 @@ void AProcTerrain::update_terrain_model()
 
 void AProcTerrain::PostEditChangeProperty(FPropertyChangedEvent& pce) {
   FName PropertyName = (pce.Property != NULL) ? pce.Property->GetFName() : NAME_None;
-  if (PropertyName == GET_MEMBER_NAME_CHECKED(AProcTerrain, terrain_mat_) 
-    && mesh_ && terrain_mat_)
-  {
+  if (PropertyName == GET_MEMBER_NAME_CHECKED(AProcTerrain, terrain_mat_)
+    && mesh_ && terrain_mat_) {
     mesh_->SetMaterial(0, terrain_mat_);
+  } 
+  if (PropertyName == GET_MEMBER_NAME_CHECKED(AProcTerrain, mesh_rot_) && mesh_) {
+    mesh_->SetRelativeRotation(mesh_rot_);
   }
   Super::PostEditChangeProperty(pce);
 }

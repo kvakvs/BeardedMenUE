@@ -14,7 +14,8 @@ public class BeardedMen : ModuleRules
 	PrivateDependencyModuleNames.AddRange(new string[] {  });
 
         var base_path = Path.GetFullPath(
-            Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name))
+//            Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name))
+		ModuleDirectory
             );
         var pv_includes = Path.Combine(base_path, "PolyVox/include");
         PublicIncludePaths.Add(pv_includes);

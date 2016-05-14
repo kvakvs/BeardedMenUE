@@ -20,13 +20,13 @@ ACursor::ACursor()
   visible_component_ = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CursorModel"));
 
   // Attach our camera and visible object to our root component. Offset and rotate the camera.
-  cam->AttachTo(RootComponent);
-  cam->SetRelativeLocation(FVector(0.0f, 150.0f, 250.0f));
+  cam->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+  cam->SetRelativeLocation(FVector(0.0f, 75.0f, 125.0f));
 
   auto lookat = visible_component_->GetComponentLocation() - cam->GetComponentLocation();
   cam->SetRelativeRotation(lookat.Rotation());
 
-  visible_component_->AttachTo(RootComponent);
+  visible_component_->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -44,21 +44,21 @@ void ACursor::Tick( float DeltaTime )
 }
 
 // Called to bind functionality to input
-void ACursor::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+void ACursor::SetupPlayerInputComponent(class UInputComponent* ic)
 {
-  Super::SetupPlayerInputComponent(InputComponent);
+  Super::SetupPlayerInputComponent(ic);
 
-  InputComponent->BindAction("CursorRight", IE_Pressed, this, &ACursor::move_right);
-  InputComponent->BindAction("CursorRight", IE_Repeat, this, &ACursor::move_right);
+  ic->BindAction("CursorRight", IE_Pressed, this, &ACursor::move_right);
+  ic->BindAction("CursorRight", IE_Repeat, this, &ACursor::move_right);
 
-  InputComponent->BindAction("CursorLeft", IE_Pressed, this, &ACursor::move_left);
-  InputComponent->BindAction("CursorLeft", IE_Repeat, this, &ACursor::move_left);
+  ic->BindAction("CursorLeft", IE_Pressed, this, &ACursor::move_left);
+  ic->BindAction("CursorLeft", IE_Repeat, this, &ACursor::move_left);
 
-  InputComponent->BindAction("CursorDown", IE_Pressed, this, &ACursor::move_down);
-  InputComponent->BindAction("CursorDown", IE_Repeat, this, &ACursor::move_down);
+  ic->BindAction("CursorDown", IE_Pressed, this, &ACursor::move_down);
+  ic->BindAction("CursorDown", IE_Repeat, this, &ACursor::move_down);
 
-  InputComponent->BindAction("CursorUp", IE_Pressed, this, &ACursor::move_up);
-  InputComponent->BindAction("CursorUp", IE_Repeat, this, &ACursor::move_up);
+  ic->BindAction("CursorUp", IE_Pressed, this, &ACursor::move_up);
+  ic->BindAction("CursorUp", IE_Repeat, this, &ACursor::move_up);
 }
 
 void ACursor::move_right()
