@@ -4,13 +4,13 @@
 #include "WorldVolume.h"
 #include "Perlin.h"
 
-WorldVolume::WorldVolume()
-{
-}
-
-WorldVolume::~WorldVolume()
-{
-}
+//WorldVolume::WorldVolume()
+//{
+//}
+//
+//WorldVolume::~WorldVolume()
+//{
+//}
 
 namespace bm {
 

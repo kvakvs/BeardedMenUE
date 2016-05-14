@@ -14,15 +14,19 @@ ACursor::ACursor()
 
   // Create a dummy root component we can attach things to.
   RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
   // Create a camera and a visible object
-  UCameraComponent* OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("OurCamera"));
-  OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
+  UCameraComponent* cam = CreateDefaultSubobject<UCameraComponent>(TEXT("CursorCamera"));
+  visible_component_ = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CursorModel"));
+
   // Attach our camera and visible object to our root component. Offset and rotate the camera.
-  OurCamera->AttachTo(RootComponent);
-  OurCamera->SetRelativeLocation(FVector(0.0f, 150.0f, 250.0f));
-  auto lookat = OurVisibleComponent->GetComponentLocation() - OurCamera->GetComponentLocation();
-  OurCamera->SetRelativeRotation(lookat.Rotation());
-  OurVisibleComponent->AttachTo(RootComponent);
+  cam->AttachTo(RootComponent);
+  cam->SetRelativeLocation(FVector(0.0f, 150.0f, 250.0f));
+
+  auto lookat = visible_component_->GetComponentLocation() - cam->GetComponentLocation();
+  cam->SetRelativeRotation(lookat.Rotation());
+
+  visible_component_->AttachTo(RootComponent);
 }
 
 // Called when the game starts or when spawned

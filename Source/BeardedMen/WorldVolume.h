@@ -9,15 +9,12 @@
 
 namespace pv = PolyVox;
 
-/**
- * 
- */
-class BEARDEDMEN_API WorldVolume
-{
-public:
-	WorldVolume();
-	~WorldVolume();
-};
+//class BEARDEDMEN_API WorldVolume
+//{
+//public:
+//  WorldVolume();
+//  ~WorldVolume();
+//};
 
 namespace bm {
 
