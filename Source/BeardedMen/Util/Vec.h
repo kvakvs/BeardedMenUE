@@ -2,6 +2,7 @@
 
 //#include <QDebug>
 #include <algorithm>
+#include <array>
 
 #include <PolyVox/Vector.h>
 #include <PolyVox/Region.h>

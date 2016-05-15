@@ -48,43 +48,51 @@ void ACursor::SetupPlayerInputComponent(class UInputComponent* ic)
 {
   Super::SetupPlayerInputComponent(ic);
 
-  ic->BindAction("CursorRight", IE_Pressed, this, &ACursor::move_right);
-  ic->BindAction("CursorRight", IE_Repeat, this, &ACursor::move_right);
+  ic->BindAction("CursorEast", IE_Pressed, this, &ACursor::move_east);
+  ic->BindAction("CursorEast", IE_Repeat,  this, &ACursor::move_east);
 
-  ic->BindAction("CursorLeft", IE_Pressed, this, &ACursor::move_left);
-  ic->BindAction("CursorLeft", IE_Repeat, this, &ACursor::move_left);
+  ic->BindAction("CursorWest", IE_Pressed, this, &ACursor::move_west);
+  ic->BindAction("CursorWest", IE_Repeat,  this, &ACursor::move_west);
+
+  ic->BindAction("CursorSouth", IE_Pressed, this, &ACursor::move_south);
+  ic->BindAction("CursorSouth", IE_Repeat,  this, &ACursor::move_south);
+
+  ic->BindAction("CursorNorth", IE_Pressed, this, &ACursor::move_north);
+  ic->BindAction("CursorNorth", IE_Repeat,  this, &ACursor::move_north);
 
   ic->BindAction("CursorDown", IE_Pressed, this, &ACursor::move_down);
-  ic->BindAction("CursorDown", IE_Repeat, this, &ACursor::move_down);
+  ic->BindAction("CursorDown", IE_Repeat,  this, &ACursor::move_down);
 
   ic->BindAction("CursorUp", IE_Pressed, this, &ACursor::move_up);
-  ic->BindAction("CursorUp", IE_Repeat, this, &ACursor::move_up);
+  ic->BindAction("CursorUp", IE_Repeat,  this, &ACursor::move_up);
 }
 
-void ACursor::move_right()
+void ACursor::move_east()
 {
-  auto loc = GetActorLocation();
-  loc.X += bm::CELL_SIZE;
-  SetActorLocation(loc);
+  SetActorLocation(GetActorLocation() + FVector(bm::CELL_SIZE, 0.f, 0.f));
 }
 
-void ACursor::move_left()
+void ACursor::move_west()
 {
-  auto loc = GetActorLocation();
-  loc.X -= bm::CELL_SIZE;
-  SetActorLocation(loc);
+  SetActorLocation(GetActorLocation() + FVector(-bm::CELL_SIZE, 0.f, 0.f));
+}
+
+void ACursor::move_south()
+{
+  SetActorLocation(GetActorLocation() + FVector(0.f, bm::CELL_SIZE, 0.f));
+}
+
+void ACursor::move_north()
+{
+  SetActorLocation(GetActorLocation() + FVector(0.f, -bm::CELL_SIZE, 0.f));
 }
 
 void ACursor::move_down()
 {
-  auto loc = GetActorLocation();
-  loc.Y += bm::CELL_SIZE;
-  SetActorLocation(loc);
+  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, bm::CELL_SIZE));
 }
 
 void ACursor::move_up()
 {
-  auto loc = GetActorLocation();
-  loc.Y -= bm::CELL_SIZE;
-  SetActorLocation(loc);
+  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, -bm::CELL_SIZE));
 }

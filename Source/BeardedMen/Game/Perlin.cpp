@@ -7,9 +7,6 @@
 /* coherent noise function over 1, 2 or 3 dimensions */
 /* (copyright Ken Perlin) */
 
-//#include <math.h>
-//#include <stdio.h>
-//#include <stdlib.h>
 #include "BeardedMen.h"
 
 #include "Perlin.h"

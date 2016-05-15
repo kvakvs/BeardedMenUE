@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/WorldSettings.h"
-#include "WorldVolume.h"
+#include "Game/WorldVolume.h"
 
 // always goes last
 #include "MyWorldSettings.generated.h"

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "WorldVolume.h"
+#include "Game/WorldVolume.h"
 
 #include "ProcTerrain.generated.h"
 
@@ -31,7 +31,9 @@ public:
   // Called every frame
   virtual void Tick( float DeltaSeconds ) override;
 
+  virtual void OnConstruction(const FTransform& Transform) override;
   virtual void PostEditChangeProperty(FPropertyChangedEvent& pce) override;
+
 private:
   //void init_terrain();
   void update_terrain_model();

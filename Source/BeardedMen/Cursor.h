@@ -28,10 +28,12 @@ public:
   virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
   // Keyboard actions
-  void move_right();
-  void move_left();
-  void move_up();
+  void move_east();
+  void move_west();
+  void move_north();
+  void move_south();
   void move_down();
+  void move_up();
 
   UPROPERTY(EditAnywhere)
     USceneComponent* visible_component_;

@@ -13,12 +13,9 @@ public class BeardedMen : ModuleRules
 
 	PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-        var base_path = Path.GetFullPath(
-//            Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name))
-		ModuleDirectory
-            );
-        var pv_includes = Path.Combine(base_path, "PolyVox/include");
-        PublicIncludePaths.Add(pv_includes);
+        var base_path = Path.GetFullPath(ModuleDirectory);
+        PublicIncludePaths.Add(Path.Combine(base_path, "PolyVox/include"));
+        PublicIncludePaths.Add(Path.Combine(base_path, "Spatial"));
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
