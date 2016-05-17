@@ -24,11 +24,11 @@ public:
     virtual void BeginPlay() override;
 	
     // Called every frame
-    virtual void Tick( float DeltaSeconds ) override;
+    virtual void Tick(float dt) override;
 
 public:
     bm::InanimateType type_;
-    bm::ModelId       model_;
+    //bm::ModelId       model_;
 
     void set_type(bm::InanimateType t) { type_ = t; }
 };
