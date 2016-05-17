@@ -89,10 +89,10 @@ void ACursor::move_north()
 
 void ACursor::move_down()
 {
-  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, bm::CELL_SIZE));
+  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, -bm::CELL_SIZE));
 }
 
 void ACursor::move_up()
 {
-  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, -bm::CELL_SIZE));
+  SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, bm::CELL_SIZE));
 }

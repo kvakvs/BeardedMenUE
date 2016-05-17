@@ -4,7 +4,7 @@
 //#include <QDebug>
 
 #include "Game/World.h"
-#include "Game/Component.h"
+#include "AnimateObject.h"
 #include "Game/WorldVolume.h"
 
 namespace bm {

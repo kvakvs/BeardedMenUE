@@ -1,47 +1,58 @@
+// Copyright 2016, Dmytro Lytovchenko
+
 #pragma once
 
+#include "GameFramework/Actor.h"
+
+#include "Util/Vec.h"
+#include "AnimateObject.h"
 #include "Tab/ModelId.h"
-#include "Game/Component.h"
 #include "Game/Co/Body.h"
-//#include "Game/Co/Worker.h"
 #include "Game/Co/Brains.h"
 #include "Game/Co/Ent.h"
 #include "AI/Action.h"
 
-namespace bm {
+#include "Man.generated.h"
 
-// TODO: evict from this file, make own file
-class BeardedMan: public AnimateObject
+UCLASS()
+class BEARDEDMEN_API AMan : public AAnimateObject
 {
+    GENERATED_BODY()
+	
+public:	
+    // Sets default values for this actor's properties
+    AMan();
+
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+	
+    // Called every frame
+    virtual void Tick(float dt) override;
+
 public:
-    BeardedMan(World *wo, const Vec3i &pos)
-        : AnimateObject(wo),
-          entity_(this, pos, ModelId::BeardedMan),
-          body_(BodyType::BeardedMan),
-          brains_(this)
-    {
-    }
-    virtual EntityComponent* as_entity() override { return &entity_; }
-    virtual const EntityComponent* as_entity() const override {return &entity_;}
+    //AMan(bm::World *wo, const bm::Vec3i &pos)
+    //    : AAnimateObject(wo),
+    //      entity_(),
+    //      body_(BodyType::BeardedMan),
+    //      brains_(this)
+    //{
+    //    entity_->set_parent(this);
+    //}
 
-    virtual BrainsComponent* as_brains() override { return &brains_; }
-    virtual const BrainsComponent* as_brains() const override {return &brains_;}
+    virtual bm::EntityComponent* as_entity() override { return &entity_; }
+    virtual const bm::EntityComponent* as_entity() const override { return &entity_; }
 
-    virtual BodyComponent* as_body() override { return &body_;   }
-    virtual const BodyComponent* as_body() const override { return &body_;   }
-    //virtual WorkerComponent* as_worker() override { return &worker_; }
+    virtual bm::BrainsComponent* as_brains() override { return &brains_; }
+    virtual const bm::BrainsComponent* as_brains() const override { return &brains_; }
 
-    // Filter list of available actions which satisfy one of conditions
-    //virtual ai::ActionVec ai_choose_actions(const ai::Goal& g) const override;
+    virtual bm::BodyComponent* as_body() override { return &body_; }
+    virtual const bm::BodyComponent* as_body() const override { return &body_; }
 
     // Initializes static vector of actions and returns constref
-    virtual const ai::ActionDefVec& ai_get_all_actions() const override;
+    virtual const bm::ai::ActionDefVec& ai_get_all_actions() const override;
 
 private:
-    EntityComponent entity_;
-    BrainsComponent brains_;
-    BodyComponent   body_;
-    //WorkerComponent worker_;
+    bm::EntityComponent entity_;
+    bm::BrainsComponent brains_;
+    bm::BodyComponent   body_;
 };
-
-} // ns bm

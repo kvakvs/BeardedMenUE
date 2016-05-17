@@ -3,8 +3,6 @@
 #include <vector>
 #include <stdint.h>
 
-//#include "game/order.h"
-
 namespace bm {
 
 enum class BodyType: uint32_t {
@@ -13,11 +11,12 @@ enum class BodyType: uint32_t {
 
 class BodyComponent {
 public:
-    BodyComponent(BodyType bt);
+    BodyComponent() {}
 
     enum class PartType: uint8_t {
         Head, Hand, Leg, Foot, Torso
     };
+    void set_body_type(BodyType bt);
 
     // TODO: slash damage to cut limbs
     // Maybe store just count of multiple parts and take them away one by one
@@ -28,16 +27,6 @@ public:
         uint32_t    hit_points_:23;
     };
 
-    /*bool can_perform_job(JobType) const {
-        // Here check if worker has enough limbs. So far all types of work
-        // require one hand
-        for (Part part: parts_) {
-            if (part.type_ == PartType::Hand) {
-                return true;
-            }
-        }
-        return false;
-    }*/
     bool has_body_part(PartType t) const {
         for (Part part: parts_) {
             if (part.type_ == t) { return true; }

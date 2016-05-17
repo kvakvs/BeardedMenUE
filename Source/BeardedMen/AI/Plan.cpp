@@ -1,7 +1,7 @@
 #include "BeardedMen.h"
 #include "AI/Plan.h"
 
-#include "Game/Component.h"
+#include "AnimateObject.h"
 #include "Game/World.h"
 #include "Util/Error.h"
 
@@ -101,7 +101,8 @@ public:
     //void PrintNodeInfo() {}
 };
 
-ActionVec propose_plan(const MetricVec& from_c0,
+ActionVec propose_plan(World *wo,
+                       const MetricVec& from_c0,
                        const MetricVec& to_c0,
                        const ai::Context& ctx)
 {
@@ -115,7 +116,6 @@ ActionVec propose_plan(const MetricVec& from_c0,
 
     check(ctx.actor_);
     AstarGlobalState glob_state { {}, ctx.actor_->ai_get_all_actions() };
-    auto wo = AnimateObject::get_world();
 
     for (auto& adef: glob_state.available_actions_) {
         //qDebug() << "Each avail action:" << adef;

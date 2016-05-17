@@ -4,6 +4,7 @@
 
 #include "GameFramework/WorldSettings.h"
 #include "Game/WorldVolume.h"
+#include "Game/World.h"
 
 // always goes last
 #include "MyWorldSettings.generated.h"
@@ -23,4 +24,5 @@ class BEARDEDMEN_API AMyWorldSettings : public AWorldSettings
 public:
   // Visible piece of world + some nearby
   std::unique_ptr<bm::VolumeType> volume_;
+  std::unique_ptr<bm::World> world_;
 };

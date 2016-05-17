@@ -7,12 +7,11 @@
 namespace bm {
 
 class World;
-class AnimateObject;
+//class AAnimateObject;
 
 namespace ai {
 
-ActionVec propose_plan(const MetricVec& from,
-                       const MetricVec& to,
+ActionVec propose_plan(World *wo, const MetricVec& from, const MetricVec& to,
                        const ai::Context& ctx);
 
 namespace impl {

@@ -1,14 +1,24 @@
 #include "BeardedMen.h"
 
-#include "Game/Co/Ent.h"
 #include <PolyVox/AStarPathfinder.h>
+
+#include "Game/Co/Ent.h"
 #include "Game/World.h"
+#include "AnimateObject.h"
 
 namespace bm {
 
+bm::Vec3i EntityComponent::get_pos() const {
+    auto v = parent_->GetActorLocation();
+    return bm::Vec3i(v.X / 8.f, v.Y / 8.f, v.Z / 8.f);
+}
+
 void EntityComponent::set_pos(const Vec3i &v) {
-    AnimateObject::get_world()->animate_position_changed_d(get_parent(), pos_);
-    pos_ = v;
+    auto wo = get_parent()->get_world();
+    wo->animate_position_changed_d(get_parent(), get_pos());
+    //pos_ = v;
+    parent_->SetActorLocation(
+        FVector(v.getX() * 8.f, v.getY() * 8.f, v.getZ() * 8.f));
 }
 
 void EntityComponent::step() {
@@ -23,7 +33,7 @@ void EntityComponent::step() {
 
 bool EntityComponent::attempt_move(const Vec3i &new_pos)
 {
-    auto wo = AnimateObject::get_world();
+    auto wo = get_parent()->get_world();
     auto new_pos_v = wo->get_voxel(new_pos);
 
     if (not new_pos_v.is_not_air() || new_pos_v.is_ramp()) {
@@ -91,7 +101,7 @@ bool EntityComponent::move_to(const Vec3i &dst, MovePrecision mp)
 bool EntityComponent::find_and_set_strict_route(const Vec3i& dst)
 {
     // You are not going into the rock
-    auto wo = AnimateObject::get_world();
+    auto wo = get_parent()->get_world();
     auto dst_v = wo->get_voxel(dst);
 
     if (not dst_v.is_air() && not dst_v.is_ramp()) {
@@ -116,7 +126,8 @@ void EntityComponent::set_planned_route(const Vec3i &dst, Route &r) {
 Route EntityComponent::find_relaxed_route(const Vec3i &dst)
 {
     Route result;
-    auto vol = AnimateObject::get_world()->get_volume();
+    auto wo = get_parent()->get_world();
+    auto vol = wo->get_volume();
 
     // First find relaxed path over ground ignoring the walls
     pv::AStarPathfinderParams<VolumeType> pfpar(
@@ -138,7 +149,8 @@ Route EntityComponent::find_relaxed_route(const Vec3i &dst)
 Route EntityComponent::find_route(const Vec3i &dst)
 {
     Route result;
-    auto vol = AnimateObject::get_world()->get_volume();
+    auto wo = get_parent()->get_world();
+    auto vol = wo->get_volume();
 
     // First find relaxed path over ground ignoring the walls
     pv::AStarPathfinderParams<VolumeType> pfpar(

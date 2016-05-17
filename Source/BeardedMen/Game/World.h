@@ -10,12 +10,12 @@
 #include "Util/Optional.h"
 #include "Game/WorldVolume.h"
 #include "Game/GameDefs.h"
-#include "Game/Inanimate.h"
+#include "InanimateObject.h"
 
 namespace bm {
 
 //using AnimateObjectMap = std::map<EntityId, AnimateObject *>;
-using SpatialAnimateMap = spatial::point_multimap<3, Array3i, AnimateObject *>;
+using SpatialAnimateMap = spatial::point_multimap<3, Array3i, AAnimateObject *>;
 
 class World {
 public:
@@ -24,13 +24,13 @@ public:
     //
     // Animate objects
     //
-    void add_animate_object(AnimateObject *ent);
-    void animate_position_changed(AnimateObject *a,
+    void add_animate_object(AAnimateObject *ent);
+    void animate_position_changed(AAnimateObject *a,
                                   const Vec3i& old,
                                   const Vec3i& updated);
     // deferred variant that keeps track of old coords and changed objects but
     // does not modify animate_ yet
-    void animate_position_changed_d(AnimateObject *a,
+    void animate_position_changed_d(AAnimateObject *a,
                                     const Vec3i& old);
     const SpatialAnimateMap& get_animate_objects() const {
         return objects_.animate_;
@@ -139,7 +139,7 @@ public:
     bool add_order(ai::Order::Ptr desired);
     void remove_order(ai::OrderId id);
     // Get a random order. See if it is not completed.
-    ai::Order::Ptr get_random_order(AnimateObject *actor);
+    ai::Order::Ptr get_random_order(AAnimateObject *actor);
 
     // Give positional or area mining goal (fun add_fn is called for each
     // position in selected area, or for single position if no area selection
@@ -184,7 +184,7 @@ private:
     struct {
         SpatialAnimateMap animate_;
         // Moved objects after logic run - we update spatial map
-        std::vector<std::pair<AnimateObject*, Vec3i>> animate_moved_;
+        std::vector<std::pair<AAnimateObject*, Vec3i>> animate_moved_;
 
         SpatialInanimateMap inanimate_;
     } objects_;
@@ -206,7 +206,7 @@ private:
     uint64_t sim_step_ = 0;
 
 private:
-    ai::Order::Ptr get_random_order(AnimateObject *actor,
+    ai::Order::Ptr get_random_order(AAnimateObject *actor,
                                     ai::OrderMap& registry);
     void lower_prio(ai::OrderId id);
     void run_animate_entities();

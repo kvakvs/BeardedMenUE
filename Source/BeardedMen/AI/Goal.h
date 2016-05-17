@@ -8,10 +8,11 @@
 #include "Util/Vec.h"
 #include "Tab/ModelId.h"
 
+class AAnimateObject;
+
 namespace bm {
 
 class World;
-class AnimateObject;
 
 namespace ai {
 
@@ -131,11 +132,11 @@ using MetricVec = std::vector<Metric>;
 class Context {
 public:
     //const World* world_ = nullptr;
-    const AnimateObject* actor_ = nullptr;
+    const AAnimateObject* actor_ = nullptr;
     Vec3i pos_;
 
     Context() {}
-    Context(const AnimateObject *act)
+    Context(const AAnimateObject *act)
         : actor_(act) {}
 };
 

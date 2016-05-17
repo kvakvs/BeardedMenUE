@@ -32,14 +32,15 @@ void AProcTerrain::BeginPlay()
 }
 
 // Called every frame
-void AProcTerrain::Tick(float DeltaTime)
+void AProcTerrain::Tick(float delta)
 {
-  Super::Tick(DeltaTime);
+  Super::Tick(delta);
 }
 
-void AProcTerrain::OnConstruction(const FTransform& Transform)
+void AProcTerrain::OnConstruction(const FTransform& tr)
 {
   update_terrain_model();
+  Super::OnConstruction(tr);
 }
 
 

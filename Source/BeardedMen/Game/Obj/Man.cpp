@@ -1,21 +1,44 @@
+// Copyright 2016, Dmytro Lytovchenko
+
 #include "BeardedMen.h"
 #include "Game/Obj/Man.h"
 
-namespace bm {
 
-const ai::ActionDefVec &BeardedMan::ai_get_all_actions() const
+// Sets default values
+AMan::AMan()
+{
+    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
+    brains_.set_parent((AAnimateObject *)this);
+    entity_.set_parent((AAnimateObject *)this);
+    body_.set_body_type(bm::BodyType::BeardedMan);
+}
+
+// Called when the game starts or when spawned
+void AMan::BeginPlay()
+{
+    Super::BeginPlay();
+}
+
+// Called every frame
+void AMan::Tick(float dt)
+{
+    Super::Tick(dt);
+}
+
+const bm::ai::ActionDefVec &AMan::ai_get_all_actions() const
 {
     static bool is_initialized = false;
-    static ai::ActionDefVec bm_actions;
+    static bm::ai::ActionDefVec bm_actions;
 
     if (not is_initialized) {
         //bm_actions = ai_load_actions("bearded_man");
-        using AT   = ai::ActionType;
-        using Mtrc = ai::Metric;
-        using CT   = ai::MetricType;
-        using V    = ai::Value;
+        using AT   = bm::ai::ActionType;
+        using Mtrc = bm::ai::Metric;
+        using CT   = bm::ai::MetricType;
+        using V    = bm::ai::Value;
 
-        bm_actions.push_back(ai::ActionDef( AT::Move,
+        bm_actions.push_back(bm::ai::ActionDef( AT::Move,
             // Requires
             { Mtrc(CT::HaveLeg, V(), V(true) /* needs subject */)
             },
@@ -23,7 +46,7 @@ const ai::ActionDefVec &BeardedMan::ai_get_all_actions() const
             { Mtrc(CT::MeleeRange, V(), V(true)) /* needs pos */
             }));
 
-        bm_actions.push_back(ai::ActionDef( AT::MoveClose,
+        bm_actions.push_back(bm::ai::ActionDef( AT::MoveClose,
             // Requires
             { Mtrc(CT::HaveLeg, V(), V(true) /* needs subject */)
             },
@@ -31,7 +54,7 @@ const ai::ActionDefVec &BeardedMan::ai_get_all_actions() const
             { Mtrc(CT::MeleeRangeDepth, V(), V(true)) /* needs pos */
             }));
 
-        bm_actions.push_back(ai::ActionDef( AT::Mine,
+        bm_actions.push_back(bm::ai::ActionDef( AT::Mine,
             // Requires
             { Mtrc(CT::MeleeRangeDepth, V(), V(true)), // needs arg (pos)
               Mtrc(CT::HaveHand, V(), V(true)), /* needs subject */
@@ -41,7 +64,7 @@ const ai::ActionDefVec &BeardedMan::ai_get_all_actions() const
             { Mtrc(CT::BlockIsNotSolid, V(), V(true) /* needs arg=pos */)
             }));
 
-        bm_actions.push_back(ai::ActionDef( AT::CreateRamp,
+        bm_actions.push_back(bm::ai::ActionDef( AT::CreateRamp,
             // Requires
             { Mtrc(CT::MeleeRangeDepth, V(), V(true)), // needs arg (pos)
               Mtrc(CT::HaveHand, V(), V(true)), /* needs subject */
@@ -56,5 +79,3 @@ const ai::ActionDefVec &BeardedMan::ai_get_all_actions() const
 
     return bm_actions;
 }
-
-} // ns bm

@@ -11,15 +11,14 @@ namespace bm {
 
 World::World(RawVolume &vol): volume_(vol) {
     // Spawn more bearded men
-    const int MANY_BEARDED_MEN = 5;
-    for (auto bm = 0; bm < MANY_BEARDED_MEN; ++bm) {
-        add_animate_object(
-                    new BeardedMan(this,
-                                   Vec3i(bm, 3, bm)) );
-    }
+    //const int MANY_BEARDED_MEN = 5;
+    //for (auto bm = 0; bm < MANY_BEARDED_MEN; ++bm) {
+    //    auto new_man = new AMan(this, Vec3i(bm, 3, bm));
+    //    add_animate_object(new_man);
+    //}
 }
 
-void World::add_animate_object(AnimateObject *ao) {
+void World::add_animate_object(AAnimateObject *ao) {
     auto ent = ao->as_entity();
     ent->set_id(ent_id_++);
 
@@ -27,7 +26,7 @@ void World::add_animate_object(AnimateObject *ao) {
     objects_.animate_.insert(std::make_pair(pos_array, ao));
 }
 
-void World::animate_position_changed(AnimateObject *a,
+void World::animate_position_changed(AAnimateObject *a,
                                      const Vec3i& old,
                                      const Vec3i& updated) {
     for (auto iter = objects_.animate_.find(util::make_array(old));
@@ -40,14 +39,16 @@ void World::animate_position_changed(AnimateObject *a,
     }
 }
 
-void World::animate_position_changed_d(AnimateObject *a, const Vec3i &old)
+void World::animate_position_changed_d(AAnimateObject *a, const Vec3i &old)
 {
     objects_.animate_moved_.push_back(std::make_pair(a, old));
 }
 
 void World::spawn_inanimate_object(const Vec3i &pos, InanimateType ot) {
-    objects_.inanimate_.insert(
-        std::make_pair(util::make_array(pos), InanimateObject(ot)));
+    auto *ia = new AInanimateObject();
+    ia->set_type(ot);
+
+    objects_.inanimate_.insert(std::make_pair(util::make_array(pos), ia));
 }
 
 void World::think() {
@@ -64,7 +65,7 @@ void World::think() {
 
 void World::run_animate_entities() {
     // Here we think for entities (passive things like gravity)
-    for_each_animate([this](AnimateObject* ao, const Vec3i& pos) {
+    for_each_animate([this](AAnimateObject* ao, const Vec3i& pos) {
         auto ent         = ao->as_entity();
         auto block_under = get_under(pos);
         if (block_under.is_air()) {
@@ -80,7 +81,7 @@ void World::run_animate_entities() {
 
 void World::run_animate_brains() {
     // Entities think for themselves
-    for_each_animate([this](AnimateObject* ao, const Vec3i& ) {
+    for_each_animate([this](AAnimateObject* ao, const Vec3i& ) {
         BrainsComponent* brains = ao->as_brains();
         if (brains) {
             brains->think();
@@ -135,7 +136,7 @@ void World::remove_order(ai::OrderId id)
 }
 
 // Order scheduler
-ai::Order::Ptr World::get_random_order(AnimateObject *actor) {
+ai::Order::Ptr World::get_random_order(AAnimateObject *actor) {
     if (sim_step_ % VERY_LOW_PRIO_ORDERS_EVERY == 0) {
         ai::Order::Ptr result = get_random_order(actor, orders_verylow_);
         if (result) {
@@ -292,7 +293,7 @@ ai::Metric World::read_metric(const ai::Metric& metric,
 }
 
 // TODO: Prefer tasks located closer
-ai::Order::Ptr World::get_random_order(AnimateObject *actor,
+ai::Order::Ptr World::get_random_order(AAnimateObject *actor,
                                        ai::OrderMap &registry)
 {
     // Pick a random order. Check if it is not fulfilled yet. Give out.

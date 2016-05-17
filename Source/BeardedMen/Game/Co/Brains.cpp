@@ -1,5 +1,6 @@
 #include "BeardedMen.h"
 
+#include "AnimateObject.h"
 #include "Game/Co/Brains.h"
 #include "Game/World.h"
 #include "AI/Plan.h"
@@ -18,7 +19,7 @@ void BrainsComponent::think() {
 }
 
 void BrainsComponent::build_plan() {
-    auto wo = AnimateObject::get_world();
+    auto wo = get_parent()->get_world();
 
 //    // Drop order if is fulfilled
 //    if (task_.current) {
@@ -40,10 +41,10 @@ void BrainsComponent::build_plan() {
     ai::Context ctx = task_.current->ctx_; // copy
     ctx.actor_ = get_parent();
 
-    auto actions = ai::propose_plan(
-                wo->get_current_situation(desired, ctx),
-                desired,   // want
-                ctx);   // context
+    auto actions = ai::propose_plan(wo,
+                                    wo->get_current_situation(desired, ctx),
+                                    desired,   // want
+                                    ctx);   // context
 
     // if there is no plan of actions, we don't want it anymore
     if (actions.empty()) {
@@ -69,7 +70,7 @@ void BrainsComponent::follow_the_plan()
     }
 
     // if plan is fulfilled
-    auto wo            = AnimateObject::get_world();
+    auto wo            = get_parent()->get_world();
     ai::Order::Ptr ord = task_.current;
     ai::Context ctx    = ord->ctx_; // copy
     ctx.actor_         = get_parent();
@@ -119,7 +120,7 @@ void BrainsComponent::plan_step_mine(const Vec3i& dst) {
 
     // Mining rules: Can reach on same depth, or can reach 1 block down
     if (close_enough(my_pos, dst, MovePrecision::AdjacentDepth)) {
-        AnimateObject::get_world()->mine_voxel(dst);
+        get_parent()->get_world()->mine_voxel(dst);
     }
     // Finish step even if mining failed
     finish_plan_step();
@@ -131,7 +132,7 @@ void BrainsComponent::plan_step_create_ramp(const Vec3i& dst) {
 
     // Mining rules: Can reach on same depth, or can reach 1 block down
     if (close_enough(my_pos, dst, MovePrecision::AdjacentDepth)) {
-        auto w = AnimateObject::get_world();
+        auto w = get_parent()->get_world();
         auto vox = w->get_voxel(dst);
         vox.set_ramp(true);
         w->set_voxel(dst, vox);
@@ -172,7 +173,7 @@ bool BrainsComponent::plan_step_move(const Vec3i& dst, MovePrecision mp) {
 
 void BrainsComponent::finish_plan(PlanResult pr)
 {
-    auto wo            = AnimateObject::get_world();
+    auto wo            = get_parent()->get_world();
     ai::Order::Ptr ord = task_.current;
     ai::Context ctx    = ord->ctx_; // copy
 

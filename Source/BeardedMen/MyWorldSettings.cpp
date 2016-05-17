@@ -7,6 +7,7 @@ namespace pv = PolyVox;
 AMyWorldSettings::AMyWorldSettings()
 {
   volume_ = std::make_unique<bm::VolumeType>(get_whole_region());
+  world_  = std::make_unique<bm::World>(*volume_);
 }
 
 pv::Region AMyWorldSettings::get_whole_region() {

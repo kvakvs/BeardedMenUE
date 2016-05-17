@@ -29,7 +29,7 @@ public:
   virtual void BeginPlay() override;
 	
   // Called every frame
-  virtual void Tick( float DeltaSeconds ) override;
+  virtual void Tick(float delta) override;
 
   virtual void OnConstruction(const FTransform& Transform) override;
   virtual void PostEditChangeProperty(FPropertyChangedEvent& pce) override;

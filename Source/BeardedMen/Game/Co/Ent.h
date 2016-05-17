@@ -6,8 +6,9 @@
 #include "Util/Vec.h"
 //#include "Gfx/Model.h"
 #include "Tab/ModelId.h"
-#include "Game/Component.h"
 #include "Game/GameDefs.h"
+
+class AAnimateObject;
 
 namespace bm {
 
@@ -22,10 +23,10 @@ using Route = std::list<Vec3i>;
 // This includes both animate and inanimate objects (dropped resources,
 // dead bodies etc)
 class EntityComponent {
-    AnimateObject *parent_;
-    Vec3i pos_;
+    AAnimateObject *parent_ = nullptr;
+    //Vec3i pos_;
     EntityId id_;
-    ModelId model_id_;
+    //ModelId model_id_;
 
     struct {
         //bool is_moving_ = false;
@@ -34,12 +35,11 @@ class EntityComponent {
     } movement_;
 
 public:
-    EntityComponent(AnimateObject *p, const Vec3i &pos, ModelId mod)
-        : parent_(p), pos_(pos), model_id_(mod) {
-    }
+    EntityComponent() {}
+    void set_parent(AAnimateObject *p) { parent_ = p; }
 
     // Each entity has a position in 3d world (cell)
-    virtual Vec3i get_pos() const { return pos_; }
+    virtual Vec3i get_pos() const;
     virtual void set_pos(const Vec3i &v);
 
     // Each entity has ID so that we don't have to use pointers everywhere
@@ -48,8 +48,8 @@ public:
     virtual void set_id(EntityId id) { id_ = id; }
 
     // Draw me like one of your cubic models
-    virtual ModelId get_model_id() { return model_id_; }
-    AnimateObject* get_parent() { return parent_; }
+    //virtual ModelId get_model_id() { return model_id_; }
+    AAnimateObject* get_parent() { return parent_; }
 
     // If route is planned, do a step. TODO: Respect movement speed
     void step();

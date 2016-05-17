@@ -4,7 +4,7 @@
 
 namespace bm {
 
-BodyComponent::BodyComponent(BodyType bt)
+void BodyComponent::set_body_type(BodyType bt)
 {
     switch (bt) {
     case BodyType::BeardedMan:

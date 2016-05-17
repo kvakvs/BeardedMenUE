@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Game/Component.h"
 #include "AI/Goal.h"
+#include "AI/Action.h"
 #include "Util/Optional.h"
 #include "Game/GameDefs.h"
+
+class AAnimateObject;
 
 namespace bm {
 
@@ -12,8 +14,9 @@ class World;
 // TODO: evict from this file, make own file
 class BrainsComponent {
 public:
-    BrainsComponent(AnimateObject *p): parent_(p) {}
-    AnimateObject* get_parent() const { return parent_; }
+    BrainsComponent() {}
+    void set_parent(AAnimateObject *p) { parent_ = p;  }
+    AAnimateObject* get_parent() const { return parent_; }
 
     // -- Intelligent --
     void think();
@@ -23,7 +26,7 @@ public:
     bool is_idle() const { return not task_.current; }
 
 private:
-    AnimateObject *parent_;
+    AAnimateObject *parent_;
 
     // List of all things we want done, plan how we want it done and list of
     // specific actions
